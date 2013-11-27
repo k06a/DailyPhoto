@@ -48,7 +48,9 @@
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+    NSMutableDictionary * prev = self.currentNode;
     self.currentNode = self.currentNode[@"parentNode"];
+    [prev removeObjectForKey:@"parentNode"]; // need to print description
 }
 
 @end
