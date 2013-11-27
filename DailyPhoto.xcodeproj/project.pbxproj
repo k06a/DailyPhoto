@@ -19,6 +19,7 @@
 		25B424A21846542B004D606E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B4248A1846542B004D606E /* UIKit.framework */; };
 		25B424AA1846542B004D606E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 25B424A81846542B004D606E /* InfoPlist.strings */; };
 		25B424AC1846542B004D606E /* DailyPhotoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B424AB1846542B004D606E /* DailyPhotoTests.m */; };
+		25B424B718465AF2004D606E /* NSXMLParser+Laconic.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B424B618465AF2004D606E /* NSXMLParser+Laconic.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,8 @@
 		25B424A71846542B004D606E /* DailyPhotoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DailyPhotoTests-Info.plist"; sourceTree = "<group>"; };
 		25B424A91846542B004D606E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		25B424AB1846542B004D606E /* DailyPhotoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DailyPhotoTests.m; sourceTree = "<group>"; };
+		25B424B518465AF2004D606E /* NSXMLParser+Laconic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSXMLParser+Laconic.h"; sourceTree = "<group>"; };
+		25B424B618465AF2004D606E /* NSXMLParser+Laconic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSXMLParser+Laconic.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +114,8 @@
 				25B424961846542B004D606E /* ABAppDelegate.m */,
 				25B424981846542B004D606E /* Images.xcassets */,
 				25B4248D1846542B004D606E /* Supporting Files */,
+				25B424B518465AF2004D606E /* NSXMLParser+Laconic.h */,
+				25B424B618465AF2004D606E /* NSXMLParser+Laconic.m */,
 			);
 			path = DailyPhoto;
 			sourceTree = "<group>";
@@ -242,6 +247,7 @@
 			files = (
 				25B424931846542B004D606E /* main.m in Sources */,
 				25B424971846542B004D606E /* ABAppDelegate.m in Sources */,
+				25B424B718465AF2004D606E /* NSXMLParser+Laconic.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
