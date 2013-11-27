@@ -9,48 +9,67 @@
 #import "NSXMLParser+Laconic.h"
 
 @interface NSXMLParserLaconicDelegate : NSObject<NSXMLParserDelegate>
-@property (strong, nonatomic) NSMutableDictionary *rootNode;
-@property (strong, atomic) NSMutableDictionary *currentNode;
+@property (strong, nonatomic) NSMutableDictionary *currentNode;
 @end
 
 @implementation NSXMLParserLaconicDelegate
 
-- (NSMutableDictionary *)rootNode {
-    if (_rootNode == nil)
-        _rootNode = [NSMutableDictionary dictionary];
-    return _rootNode;
-}
-
-- (id)init {
-    if (self = [super init]) {
-        self.rootNode[@"name"] = @"RootNode";
-        self.rootNode[@"childs"] = [NSMutableArray array];
-        self.currentNode = self.rootNode;
-    }
-    return self;
+- (NSMutableDictionary *)currentNode {
+    if (_currentNode == nil)
+        _currentNode = [NSMutableDictionary dictionary];
+    return _currentNode;
 }
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
-    NSMutableDictionary * newNode = [@{
-       @"parentNode":self.currentNode,
-       @"name":elementName,
-       @"attributes":attributeDict,
-       @"childs":[NSMutableArray array]
-       } mutableCopy];
+    NSMutableDictionary * newNode = [NSMutableDictionary dictionary];
+    newNode[@"parentNode"] = self.currentNode;
+    newNode[@"name"] = elementName;
     
-    [self.currentNode[@"childs"] addObject:newNode];
+    if (attributeDict && attributeDict.count > 0)
+        for (id key in attributeDict)
+            newNode[key] = attributeDict[key];
     
     self.currentNode = newNode;
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-    self.currentNode[@"content"] = string;
+    if (!self.currentNode[@"content"])
+        self.currentNode[@"content"] = [NSMutableString string];
+    [self.currentNode[@"content"] appendString:string];
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
     NSMutableDictionary * prev = self.currentNode;
     self.currentNode = self.currentNode[@"parentNode"];
-    [prev removeObjectForKey:@"parentNode"]; // need to print description
+    
+    void(^setNode)(id node) = nil;
+    
+    // Using name as key in parent node
+    if (self.currentNode[prev[@"name"]] == nil) {
+        setNode = ^(id node){
+            self.currentNode[prev[@"name"]] = node;
+        };
+    }
+    else if (![self.currentNode[prev[@"name"]] isKindOfClass:[NSArray class]]) {
+        setNode = ^(id node){
+            self.currentNode[prev[@"name"]] = [NSMutableArray arrayWithObject:node];
+        };
+    }
+    else {
+        setNode = ^(id node){
+            [self.currentNode[prev[@"name"]] addObject:node];
+        };
+    }
+    
+    // 3 key-values: parent, name, content
+    if (prev.count == 3 && prev[@"content"]) {
+        // Inlining data at content key
+        setNode(prev[@"content"]);
+    } else {
+        setNode(prev);
+        [prev removeObjectForKey:@"parentNode"];
+        [prev removeObjectForKey:@"name"];
+    }
 }
 
 @end
@@ -67,12 +86,12 @@
     if ([parser parse]) {
         if (error)
             *error = nil;
-        return [laconic.rootNode copy];
+        return [laconic.currentNode copy];
     }
     
     if (error)
         *error = parser.parserError;
-    return laconic.rootNode;
+    return laconic.currentNode;
 }
 
 @end
