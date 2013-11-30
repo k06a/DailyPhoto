@@ -8,11 +8,14 @@
 
 #import "ABTileViewController.h"
 #import "NSXMLParser+Laconic.h"
+#import "ABDiskCache.h"
+#import "UIImage+ImageWithDataNoCopy.h"
 
 @interface ABTileViewController () <UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 
 @property (strong, nonatomic) NSMutableArray *items;
-@property (strong, nonatomic) NSMutableDictionary *imageCache;
+@property (strong, nonatomic) ABDiskCache *imageCache;
+@property (strong, nonatomic) NSString *nextPageUrl;
 
 @end
 
@@ -27,10 +30,10 @@
     return _items;
 }
 
-- (NSMutableDictionary *)imageCache
+- (ABDiskCache *)imageCache
 {
     if (_imageCache == nil)
-        _imageCache = [NSMutableDictionary dictionary];
+        _imageCache = [[ABDiskCache alloc] init];
     return _imageCache;
 }
 
@@ -46,8 +49,7 @@
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(self.view.bounds.size.width/4,
-                      self.view.bounds.size.width/4);
+    return CGSizeMake(64,64);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
@@ -90,13 +92,16 @@
     }
     
     NSURL *url = [NSURL URLWithString:self.items[indexPath.item][@"media:thumbnail"][@"url"]];
-    imageView.image = self.imageCache[url];
+    NSData *data = [self.imageCache objectForKey:url];
+    if (data)
+        imageView.image = [UIImage imageWithDataNoCopy:data];
     
     if (imageView.image) {
         [self tileShowAnimation:imageView];
     } else {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+            NSData *data = [NSData dataWithContentsOfURL:url];
+            UIImage *image = [UIImage imageWithData:data];
             if (image == nil)
                 return;
             
@@ -104,10 +109,17 @@
                 UICollectionViewCell * cell = [collectionView cellForItemAtIndexPath:indexPath];
                 UIImageView *imageView = (id)[cell.contentView viewWithTag:imageViewTag];
                 imageView.image = image;
-                self.imageCache[url] = image;
+                [self.imageCache setObject:UIImagePNGRepresentation([image decompressed]) forKey:url];
                 [self tileShowAnimation:imageView];
             });
         });
+    }
+    
+    if (indexPath.item == self.items.count - 1) {
+        [self loadPageUrl:self.nextPageUrl
+                 nextPage:^(NSString *nextPageUrl) {
+                     self.nextPageUrl = nextPageUrl;
+                 }];
     }
     
     return cell;
@@ -115,12 +127,10 @@
 
 #pragma mark - UIView
 
-- (void)setup
+- (void)loadPageUrl:(NSString *)urlStr nextPage:(void(^)(NSString *))nextPage
 {
-    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell_photo"];
-
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSURL *url = [NSURL URLWithString:@"http://fotki.yandex.ru/calendar/rss2"];
+        NSURL *url = [NSURL URLWithString:urlStr];
         NSData *data = [NSData dataWithContentsOfURL:url];
         NSError *error;
         id xml = [NSXMLParser XMLObjectWithData:data error:&error];
@@ -130,10 +140,33 @@
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.items addObjectsFromArray:xml[@"rss"][@"channel"][@"item"]];
-            [self.collectionView reloadData];
+            if (nextPage)
+                nextPage(xml[@"rss"][@"channel"][@"atom:link"][@"href"]);
+            
+            NSMutableArray *indexPaths = [NSMutableArray array];
+            for (id item in xml[@"rss"][@"channel"][@"item"]) {
+                if (item[@"media:thumbnail"][@"url"]) {
+                    [indexPaths addObject:[NSIndexPath indexPathForItem:self.items.count inSection:0]];
+                    [self.items addObject:item];
+                }
+            }
+            
+            [self.collectionView performBatchUpdates:^{
+                [self.collectionView insertItemsAtIndexPaths:indexPaths];
+            } completion:^(BOOL finished) {
+                ;
+            }];
         });
     });
+}
+
+- (void)setup
+{
+    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell_photo"];
+    [self loadPageUrl:@"http://fotki.yandex.ru/calendar/rss2"
+             nextPage:^(NSString *nextPageUrl) {
+                 self.nextPageUrl = nextPageUrl;
+             }];
 }
 
 - (id)initWithCollectionViewLayout:(UICollectionViewLayout *)layout

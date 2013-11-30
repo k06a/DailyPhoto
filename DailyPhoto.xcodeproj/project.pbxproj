@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		25494677184A547B00BDC380 /* ABTileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25494676184A547B00BDC380 /* ABTileViewController.m */; };
+		2549467A184A659600BDC380 /* ABDiskCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 25494679184A659600BDC380 /* ABDiskCache.m */; };
+		2549467D184A711600BDC380 /* UIImage+ImageWithDataNoCopy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2549467C184A711600BDC380 /* UIImage+ImageWithDataNoCopy.m */; };
+		2549467F184A7E1F00BDC380 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2549467E184A7E1F00BDC380 /* ImageIO.framework */; };
 		25B424871846542B004D606E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B424861846542B004D606E /* Foundation.framework */; };
 		25B424891846542B004D606E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B424881846542B004D606E /* CoreGraphics.framework */; };
 		25B4248B1846542B004D606E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B4248A1846542B004D606E /* UIKit.framework */; };
@@ -36,6 +39,11 @@
 /* Begin PBXFileReference section */
 		25494675184A547B00BDC380 /* ABTileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABTileViewController.h; sourceTree = "<group>"; };
 		25494676184A547B00BDC380 /* ABTileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABTileViewController.m; sourceTree = "<group>"; };
+		25494678184A659600BDC380 /* ABDiskCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABDiskCache.h; sourceTree = "<group>"; };
+		25494679184A659600BDC380 /* ABDiskCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABDiskCache.m; sourceTree = "<group>"; };
+		2549467B184A711600BDC380 /* UIImage+ImageWithDataNoCopy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageWithDataNoCopy.h"; sourceTree = "<group>"; };
+		2549467C184A711600BDC380 /* UIImage+ImageWithDataNoCopy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageWithDataNoCopy.m"; sourceTree = "<group>"; };
+		2549467E184A7E1F00BDC380 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		25B424831846542B004D606E /* DailyPhoto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyPhoto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		25B424861846542B004D606E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		25B424881846542B004D606E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -61,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2549467F184A7E1F00BDC380 /* ImageIO.framework in Frameworks */,
 				25B424891846542B004D606E /* CoreGraphics.framework in Frameworks */,
 				25B4248B1846542B004D606E /* UIKit.framework in Frameworks */,
 				25B424871846542B004D606E /* Foundation.framework in Frameworks */,
@@ -102,6 +111,7 @@
 		25B424851846542B004D606E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2549467E184A7E1F00BDC380 /* ImageIO.framework */,
 				25B424861846542B004D606E /* Foundation.framework */,
 				25B424881846542B004D606E /* CoreGraphics.framework */,
 				25B4248A1846542B004D606E /* UIKit.framework */,
@@ -121,6 +131,10 @@
 				25B424B618465AF2004D606E /* NSXMLParser+Laconic.m */,
 				25494675184A547B00BDC380 /* ABTileViewController.h */,
 				25494676184A547B00BDC380 /* ABTileViewController.m */,
+				25494678184A659600BDC380 /* ABDiskCache.h */,
+				25494679184A659600BDC380 /* ABDiskCache.m */,
+				2549467B184A711600BDC380 /* UIImage+ImageWithDataNoCopy.h */,
+				2549467C184A711600BDC380 /* UIImage+ImageWithDataNoCopy.m */,
 			);
 			path = DailyPhoto;
 			sourceTree = "<group>";
@@ -253,6 +267,8 @@
 				25B424931846542B004D606E /* main.m in Sources */,
 				25494677184A547B00BDC380 /* ABTileViewController.m in Sources */,
 				25B424971846542B004D606E /* ABAppDelegate.m in Sources */,
+				2549467D184A711600BDC380 /* UIImage+ImageWithDataNoCopy.m in Sources */,
+				2549467A184A659600BDC380 /* ABDiskCache.m in Sources */,
 				25B424B718465AF2004D606E /* NSXMLParser+Laconic.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -377,6 +393,7 @@
 				INFOPLIST_FILE = "DailyPhoto/DailyPhoto-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -391,6 +408,7 @@
 				INFOPLIST_FILE = "DailyPhoto/DailyPhoto-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
