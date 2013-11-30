@@ -7,7 +7,7 @@
 //
 
 #import "ABAppDelegate.h"
-#import "NSXMLParser+Laconic.h"
+#import "ABTileViewController.h"
 
 @implementation ABAppDelegate
 
@@ -18,13 +18,11 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
-    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://fotki.yandex.ru/calendar/rss2"]];
-    
-    NSError *error;
-    id xml = [NSXMLParser XMLObjectWithData:data error:&error];
-    NSLog(@"%@", xml);
-    
-    UINavigationController *navigationController = [[UINavigationController alloc] init];
+    ABTileViewController *tileViewController = [[ABTileViewController alloc] initWithCollectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
+    tileViewController.wantsFullScreenLayout = YES;
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:tileViewController];
+    navigationController.navigationBarHidden = YES;
+    navigationController.wantsFullScreenLayout = YES;
     self.window.rootViewController = navigationController;
     
     return YES;
