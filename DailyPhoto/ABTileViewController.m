@@ -7,9 +7,12 @@
 //
 
 #import "ABTileViewController.h"
+#import "ABPhotoViewController.h"
 #import "NSXMLParser+Laconic.h"
 #import "ABDiskCache.h"
 #import "UIImage+DecompressAndMap.h"
+
+const NSInteger imageViewTag = 101;
 
 @interface ABTileViewController () <UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 
@@ -80,7 +83,6 @@
 {
     UICollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell_photo" forIndexPath:indexPath];
     
-    const NSInteger imageViewTag = 101;
     UIImageView *imageView;
     
     if (cell.contentView.subviews.count == 0) {
@@ -125,6 +127,19 @@
      */
     
     return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    self.navigationController.modalPresentationStyle = UIModalPresentationCurrentContext;
+    
+    ABPhotoViewController * controller = [[ABPhotoViewController alloc] init];
+    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    UIView * v = [collectionView cellForItemAtIndexPath:indexPath].contentView;
+    controller.miniFrame = [v convertRect:v.bounds toView:self.view];//CGRectOffset([collectionView layoutAttributesForItemAtIndexPath:indexPath].frame, 0, self.collectionView.contentInset.top);
+    controller.miniImage = [(UIImageView *)[[collectionView cellForItemAtIndexPath:indexPath].contentView viewWithTag:imageViewTag] image];
+    
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 #pragma mark - UIView
