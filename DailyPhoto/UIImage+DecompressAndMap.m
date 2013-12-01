@@ -13,8 +13,11 @@
 
 - (UIImage *)decompressAndMap
 {
-    NSString *path = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0];
-    NSString *filename = [@([self hash]) description];
+    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    NSString *filename = [NSString stringWithFormat:@"%lu-%d-%d",
+                          (unsigned long)[self hash],
+                          (int)self.size.width,
+                          (int)self.size.height];
     return [self decompressAndMapToPath:[path stringByAppendingPathComponent:filename]];
 }
 

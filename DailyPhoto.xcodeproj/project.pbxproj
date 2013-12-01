@@ -24,6 +24,7 @@
 		25B424AA1846542B004D606E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 25B424A81846542B004D606E /* InfoPlist.strings */; };
 		25B424AC1846542B004D606E /* DailyPhotoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B424AB1846542B004D606E /* DailyPhotoTests.m */; };
 		25B424B718465AF2004D606E /* NSXMLParser+Laconic.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B424B618465AF2004D606E /* NSXMLParser+Laconic.m */; };
+		25FA8A1A184B97C700A864BB /* ABBetterNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25FA8A19184B97C700A864BB /* ABBetterNavigationController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,8 @@
 		25B424AB1846542B004D606E /* DailyPhotoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DailyPhotoTests.m; sourceTree = "<group>"; };
 		25B424B518465AF2004D606E /* NSXMLParser+Laconic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSXMLParser+Laconic.h"; sourceTree = "<group>"; };
 		25B424B618465AF2004D606E /* NSXMLParser+Laconic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSXMLParser+Laconic.m"; sourceTree = "<group>"; };
+		25FA8A18184B97C700A864BB /* ABBetterNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABBetterNavigationController.h; sourceTree = "<group>"; };
+		25FA8A19184B97C700A864BB /* ABBetterNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABBetterNavigationController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +138,8 @@
 				25494679184A659600BDC380 /* ABDiskCache.m */,
 				2549467B184A711600BDC380 /* UIImage+DecompressAndMap.h */,
 				2549467C184A711600BDC380 /* UIImage+DecompressAndMap.m */,
+				25FA8A18184B97C700A864BB /* ABBetterNavigationController.h */,
+				25FA8A19184B97C700A864BB /* ABBetterNavigationController.m */,
 			);
 			path = DailyPhoto;
 			sourceTree = "<group>";
@@ -270,6 +275,7 @@
 				25B424931846542B004D606E /* main.m in Sources */,
 				25494677184A547B00BDC380 /* ABTileViewController.m in Sources */,
 				25B424971846542B004D606E /* ABAppDelegate.m in Sources */,
+				25FA8A1A184B97C700A864BB /* ABBetterNavigationController.m in Sources */,
 				2549467D184A711600BDC380 /* UIImage+DecompressAndMap.m in Sources */,
 				2549467A184A659600BDC380 /* ABDiskCache.m in Sources */,
 				25B424B718465AF2004D606E /* NSXMLParser+Laconic.m in Sources */,
@@ -397,6 +403,7 @@
 				INFOPLIST_FILE = "DailyPhoto/DailyPhoto-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "F9E0A0B2-F8DF-48A7-A0EE-466F815C782C";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -407,12 +414,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DailyPhoto/DailyPhoto-Prefix.pch";
 				INFOPLIST_FILE = "DailyPhoto/DailyPhoto-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "F9E0A0B2-F8DF-48A7-A0EE-466F815C782C";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

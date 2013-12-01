@@ -7,6 +7,7 @@
 //
 
 #import "ABAppDelegate.h"
+#import "ABBetterNavigationController.h"
 #import "ABTileViewController.h"
 
 @implementation ABAppDelegate
@@ -19,7 +20,7 @@
     
     ABTileViewController *tileViewController = [[ABTileViewController alloc] initWithCollectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
     tileViewController.wantsFullScreenLayout = YES;
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:tileViewController];
+    ABBetterNavigationController *navigationController = [[ABBetterNavigationController alloc] initWithRootViewController:tileViewController];
     navigationController.navigationBarHidden = YES;
     navigationController.wantsFullScreenLayout = YES;
     self.window.rootViewController = navigationController;

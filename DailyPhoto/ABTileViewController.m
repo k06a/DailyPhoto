@@ -50,8 +50,8 @@
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
-        return CGSizeMake(64,64);
-    return CGSizeMake(80,80);
+        return CGSizeMake(128,128);
+    return CGSizeMake(40,40);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
@@ -162,6 +162,11 @@
             [self.collectionView reloadData];
         });
     });
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
 }
 
 - (void)setup
