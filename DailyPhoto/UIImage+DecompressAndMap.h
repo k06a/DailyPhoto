@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIImage (ImageWithDataNoCopy)
+@interface UIImage (DecompressAndMap)
 
-- (UIImage *)decompressed;
-+ (UIImage *)imageWithDataNoCopy:(NSData *)data;
+- (UIImage *)decompressAndMap;
+- (UIImage *)decompressAndMapToPath:(NSString *)path;
 
 @end

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		25494677184A547B00BDC380 /* ABTileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25494676184A547B00BDC380 /* ABTileViewController.m */; };
 		2549467A184A659600BDC380 /* ABDiskCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 25494679184A659600BDC380 /* ABDiskCache.m */; };
-		2549467D184A711600BDC380 /* UIImage+ImageWithDataNoCopy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2549467C184A711600BDC380 /* UIImage+ImageWithDataNoCopy.m */; };
+		2549467D184A711600BDC380 /* UIImage+DecompressAndMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 2549467C184A711600BDC380 /* UIImage+DecompressAndMap.m */; };
 		2549467F184A7E1F00BDC380 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2549467E184A7E1F00BDC380 /* ImageIO.framework */; };
 		25B424871846542B004D606E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B424861846542B004D606E /* Foundation.framework */; };
 		25B424891846542B004D606E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B424881846542B004D606E /* CoreGraphics.framework */; };
@@ -41,8 +41,8 @@
 		25494676184A547B00BDC380 /* ABTileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABTileViewController.m; sourceTree = "<group>"; };
 		25494678184A659600BDC380 /* ABDiskCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABDiskCache.h; sourceTree = "<group>"; };
 		25494679184A659600BDC380 /* ABDiskCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABDiskCache.m; sourceTree = "<group>"; };
-		2549467B184A711600BDC380 /* UIImage+ImageWithDataNoCopy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageWithDataNoCopy.h"; sourceTree = "<group>"; };
-		2549467C184A711600BDC380 /* UIImage+ImageWithDataNoCopy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageWithDataNoCopy.m"; sourceTree = "<group>"; };
+		2549467B184A711600BDC380 /* UIImage+DecompressAndMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+DecompressAndMap.h"; sourceTree = "<group>"; };
+		2549467C184A711600BDC380 /* UIImage+DecompressAndMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+DecompressAndMap.m"; sourceTree = "<group>"; };
 		2549467E184A7E1F00BDC380 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		25B424831846542B004D606E /* DailyPhoto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyPhoto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		25B424861846542B004D606E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -133,8 +133,8 @@
 				25494676184A547B00BDC380 /* ABTileViewController.m */,
 				25494678184A659600BDC380 /* ABDiskCache.h */,
 				25494679184A659600BDC380 /* ABDiskCache.m */,
-				2549467B184A711600BDC380 /* UIImage+ImageWithDataNoCopy.h */,
-				2549467C184A711600BDC380 /* UIImage+ImageWithDataNoCopy.m */,
+				2549467B184A711600BDC380 /* UIImage+DecompressAndMap.h */,
+				2549467C184A711600BDC380 /* UIImage+DecompressAndMap.m */,
 			);
 			path = DailyPhoto;
 			sourceTree = "<group>";
@@ -267,7 +267,7 @@
 				25B424931846542B004D606E /* main.m in Sources */,
 				25494677184A547B00BDC380 /* ABTileViewController.m in Sources */,
 				25B424971846542B004D606E /* ABAppDelegate.m in Sources */,
-				2549467D184A711600BDC380 /* UIImage+ImageWithDataNoCopy.m in Sources */,
+				2549467D184A711600BDC380 /* UIImage+DecompressAndMap.m in Sources */,
 				2549467A184A659600BDC380 /* ABDiskCache.m in Sources */,
 				25B424B718465AF2004D606E /* NSXMLParser+Laconic.m in Sources */,
 			);

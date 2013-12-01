@@ -9,12 +9,12 @@
 #import "ABTileViewController.h"
 #import "NSXMLParser+Laconic.h"
 #import "ABDiskCache.h"
-#import "UIImage+ImageWithDataNoCopy.h"
+#import "UIImage+DecompressAndMap.h"
 
 @interface ABTileViewController () <UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 
 @property (strong, nonatomic) NSMutableArray *items;
-@property (strong, nonatomic) ABDiskCache *imageCache;
+@property (strong, nonatomic) NSMutableDictionary *imageCache;
 @property (strong, nonatomic) NSString *nextPageUrl;
 
 @end
@@ -30,10 +30,10 @@
     return _items;
 }
 
-- (ABDiskCache *)imageCache
+- (NSMutableDictionary *)imageCache
 {
     if (_imageCache == nil)
-        _imageCache = [[ABDiskCache alloc] init];
+        _imageCache = [[NSMutableDictionary alloc] init];
     return _imageCache;
 }
 
@@ -42,7 +42,7 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section
 {
-    return self.items.count;
+    return self.items.count * 100;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
@@ -65,7 +65,7 @@
 - (void)tileShowAnimation:(UIView *)tileView
 {
     tileView.alpha = 0.0;
-    [UIView animateWithDuration:0.2
+    [UIView animateWithDuration:0.1
                           delay:0.0
                         options:(UIViewAnimationOptionCurveEaseInOut)
                      animations:^{
@@ -91,10 +91,9 @@
         imageView = (id)[cell.contentView viewWithTag:imageViewTag];
     }
     
-    NSURL *url = [NSURL URLWithString:self.items[indexPath.item][@"media:thumbnail"][@"url"]];
-    NSData *data = [self.imageCache objectForKey:url];
-    if (data)
-        imageView.image = [UIImage imageWithDataNoCopy:data];
+    NSString *urlStr = self.items[indexPath.item%self.items.count][@"media:thumbnail"][@"url"];
+    NSURL *url = [NSURL URLWithString:urlStr];
+    imageView.image = [self.imageCache objectForKey:urlStr];
     
     if (imageView.image) {
         [self tileShowAnimation:imageView];
@@ -102,6 +101,7 @@
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSData *data = [NSData dataWithContentsOfURL:url];
             UIImage *image = [UIImage imageWithData:data];
+            image = [image decompressAndMap];
             if (image == nil)
                 return;
             
@@ -109,18 +109,20 @@
                 UICollectionViewCell * cell = [collectionView cellForItemAtIndexPath:indexPath];
                 UIImageView *imageView = (id)[cell.contentView viewWithTag:imageViewTag];
                 imageView.image = image;
-                [self.imageCache setObject:UIImagePNGRepresentation([image decompressed]) forKey:url];
+                [self.imageCache setObject:image forKey:urlStr];
                 [self tileShowAnimation:imageView];
             });
         });
     }
     
+    /*
     if (indexPath.item == self.items.count - 1) {
         [self loadPageUrl:self.nextPageUrl
                  nextPage:^(NSString *nextPageUrl) {
                      self.nextPageUrl = nextPageUrl;
                  }];
     }
+     */
     
     return cell;
 }
@@ -150,12 +152,14 @@
                     [self.items addObject:item];
                 }
             }
-            
+            /*
             [self.collectionView performBatchUpdates:^{
                 [self.collectionView insertItemsAtIndexPaths:indexPaths];
             } completion:^(BOOL finished) {
                 ;
             }];
+             */
+            [self.collectionView reloadData];
         });
     });
 }
@@ -169,18 +173,11 @@
              }];
 }
 
-- (id)initWithCollectionViewLayout:(UICollectionViewLayout *)layout
-{
-    if (self = [super initWithCollectionViewLayout:layout]) {
-        [self setup];
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+	
+    [self setup];
 }
 
 - (void)didReceiveMemoryWarning
