@@ -216,6 +216,9 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Codeless Solution";
 				TargetAttributes = {
+					25B424821846542B004D606E = {
+						DevelopmentTeam = U9FF7SJK5F;
+					};
 					25B4249D1846542B004D606E = {
 						TestTargetID = 25B424821846542B004D606E;
 					};
@@ -388,6 +391,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DailyPhoto/DailyPhoto-Prefix.pch";
 				INFOPLIST_FILE = "DailyPhoto/DailyPhoto-Info.plist";
@@ -403,6 +407,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DailyPhoto/DailyPhoto-Prefix.pch";
 				INFOPLIST_FILE = "DailyPhoto/DailyPhoto-Info.plist";

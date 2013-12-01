@@ -42,14 +42,16 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section
 {
-    return self.items.count * 100;
+    return self.items.count * 1000;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(64,64);
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+        return CGSizeMake(64,64);
+    return CGSizeMake(80,80);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
@@ -65,7 +67,7 @@
 - (void)tileShowAnimation:(UIView *)tileView
 {
     tileView.alpha = 0.0;
-    [UIView animateWithDuration:0.1
+    [UIView animateWithDuration:0.25
                           delay:0.0
                         options:(UIViewAnimationOptionCurveEaseInOut)
                      animations:^{
@@ -92,16 +94,14 @@
     }
     
     NSString *urlStr = self.items[indexPath.item%self.items.count][@"media:thumbnail"][@"url"];
-    NSURL *url = [NSURL URLWithString:urlStr];
     imageView.image = [self.imageCache objectForKey:urlStr];
     
     if (imageView.image) {
         [self tileShowAnimation:imageView];
     } else {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSData *data = [NSData dataWithContentsOfURL:url];
-            UIImage *image = [UIImage imageWithData:data];
-            image = [image decompressAndMap];
+            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlStr]];
+            UIImage *image = [[UIImage imageWithData:data] decompressAndMap];
             if (image == nil)
                 return;
             
@@ -166,6 +166,7 @@
 
 - (void)setup
 {
+    self.collectionView.showsVerticalScrollIndicator = NO;
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell_photo"];
     [self loadPageUrl:@"http://fotki.yandex.ru/calendar/rss2"
              nextPage:^(NSString *nextPageUrl) {
