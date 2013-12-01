@@ -19,6 +19,21 @@
 
 @implementation ABPhotoViewController
 
+@synthesize fullImage = _fullImage;
+
+- (UIImage *)fullImage
+{
+    if (_fullImage == nil)
+        return _miniImage;
+    return _fullImage;
+}
+
+- (void)setFullImage:(UIImage *)fullImage
+{
+    _fullImage = fullImage;
+    self.imageView2.image = fullImage;
+}
+
 - (void)tap:(id)sender
 {
     [UIView animateWithDuration:0.3
@@ -30,6 +45,8 @@
                          self.imageView.transform = CGAffineTransformIdentity;
                          self.imageView2.transform = CGAffineTransformIdentity;
                      } completion:^(BOOL finished) {
+                         self.imageView.hidden = NO;
+                         self.imageView2.hidden = YES;
                          [self dismissViewControllerAnimated:NO completion:nil];
                      }];
 }
@@ -63,11 +80,6 @@
 {
     [super viewDidAppear:animated];
     
-    self.imageView2 = [[UIImageView alloc] initWithFrame:self.imageView.frame];
-    self.imageView2.contentMode = UIViewContentModeScaleAspectFill;
-    self.imageView2.clipsToBounds = YES;
-    self.imageView2.image = self.miniImage;
-    
     /*
     [UIView transitionFromView:self.imageView
                         toView:self.imageView2
@@ -95,8 +107,20 @@
                          self.imageView.transform = trans;
                          self.imageView2.transform = trans;
                      } completion:^(BOOL finished) {
-                         ;
+                         self.imageView.hidden = YES;
+                         self.imageView2.hidden = NO;
                      }];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.blackView.frame = self.miniFrame;
+    self.imageView.frame = self.miniFrame;
+    self.imageView.image = self.miniImage;
+    self.imageView2.frame = self.miniFrame;
+    self.imageView2.image = self.fullImage;
 }
 
 - (void)viewDidLoad
@@ -112,10 +136,14 @@
     self.imageView = [[UIImageView alloc] initWithFrame:self.miniFrame];
     self.imageView.contentMode = UIViewContentModeScaleAspectFill;
     self.imageView.clipsToBounds = YES;
-    self.imageView.image = self.miniImage;
+    self.imageView2 = [[UIImageView alloc] initWithFrame:self.miniFrame];
+    self.imageView2.contentMode = UIViewContentModeScaleAspectFill;
+    self.imageView2.clipsToBounds = YES;
     
     [self.view addSubview:self.blackView];
     [self.view addSubview:self.imageView];
+    [self.view addSubview:self.imageView2];
+    self.imageView2.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning

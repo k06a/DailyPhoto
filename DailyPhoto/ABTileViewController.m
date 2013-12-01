@@ -19,6 +19,7 @@ const NSInteger imageViewTag = 101;
 @property (strong, nonatomic) NSMutableArray *items;
 @property (strong, nonatomic) NSMutableDictionary *imageCache;
 @property (strong, nonatomic) NSString *nextPageUrl;
+@property (strong, nonatomic) ABPhotoViewController *photoViewController;
 
 @end
 
@@ -38,6 +39,16 @@ const NSInteger imageViewTag = 101;
     if (_imageCache == nil)
         _imageCache = [[NSMutableDictionary alloc] init];
     return _imageCache;
+}
+
+- (ABPhotoViewController *)photoViewController
+{
+    if (_photoViewController == nil)
+    {
+        _photoViewController = [[ABPhotoViewController alloc] init];
+        _photoViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    }
+    return _photoViewController;
 }
 
 #pragma mark - Collection View
@@ -133,13 +144,26 @@ const NSInteger imageViewTag = 101;
 {
     self.navigationController.modalPresentationStyle = UIModalPresentationCurrentContext;
     
-    ABPhotoViewController * controller = [[ABPhotoViewController alloc] init];
-    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     UIView * v = [collectionView cellForItemAtIndexPath:indexPath].contentView;
-    controller.miniFrame = [v convertRect:v.bounds toView:self.view];//CGRectOffset([collectionView layoutAttributesForItemAtIndexPath:indexPath].frame, 0, self.collectionView.contentInset.top);
-    controller.miniImage = [(UIImageView *)[[collectionView cellForItemAtIndexPath:indexPath].contentView viewWithTag:imageViewTag] image];
+    self.photoViewController.miniFrame = [v convertRect:v.bounds toView:self.view];
+    self.photoViewController.miniImage = [(UIImageView *)[[collectionView cellForItemAtIndexPath:indexPath].contentView viewWithTag:imageViewTag] image];
     
-    [self presentViewController:controller animated:YES completion:nil];
+    NSString *urlStr = self.items[indexPath.item%self.items.count][@"media:content"][@"url"];
+    self.photoViewController.fullImage = [self.imageCache objectForKey:urlStr];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlStr]];
+        UIImage *image = [[UIImage imageWithData:data] decompressAndMap];
+        if (image == nil)
+            return;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.photoViewController.fullImage = image;
+            [self.imageCache setObject:image forKey:urlStr];
+        });
+    });
+    
+    [self presentViewController:self.photoViewController animated:YES completion:nil];
 }
 
 #pragma mark - UIView
