@@ -104,7 +104,7 @@
     */
     
     [UIView animateWithDuration:0.4
-                          delay:0.1
+                          delay:0.0
                         options:(UIViewAnimationOptionCurveEaseInOut)
                      animations:^{
                          self.view.backgroundColor = [UIColor blackColor];
