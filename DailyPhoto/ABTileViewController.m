@@ -97,7 +97,7 @@ const NSInteger imageViewTag = 101;
     
     if (cell.contentView.subviews.count == 0) {
         imageView = [[UIImageView alloc] initWithFrame:cell.contentView.bounds];
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.contentMode = UIViewContentModeCenter;//ScaleAspectFill;
         imageView.clipsToBounds = YES;
         imageView.tag = imageViewTag;
         [cell.contentView addSubview:imageView];
@@ -106,9 +106,14 @@ const NSInteger imageViewTag = 101;
     }
     
     NSString *urlStr = self.items[indexPath.item%self.items.count][@"media:thumbnail"][@"url"];
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0]
+                      stringByAppendingPathComponent:[NSString stringWithFormat:@"%lu-%d-%d",
+                                                      (unsigned long)[urlStr hash],
+                                                      (int)[urlStr length],
+                                                      (int)[self collectionView:nil layout:nil sizeForItemAtIndexPath:nil].width]];
     imageView.image = [self.imageCache objectForKey:urlStr];
     if (imageView.image == nil) {
-        imageView.image = [UIImage imageMapUsingKey:urlStr];
+        imageView.image = [UIImage imageMapFromPath:urlStr];
         if (imageView.image)
             [self.imageCache setObject:imageView.image forKey:urlStr];
     }
@@ -118,7 +123,11 @@ const NSInteger imageViewTag = 101;
     } else {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlStr]];
-            UIImage *image = [[UIImage imageWithData:data] decompressAndMapUsingKey:urlStr];
+            UIImage *image = [UIImage imageWithData:data];
+            CGFloat w = MIN(image.size.width, image.size.height);
+            image = [image decompressAndMapToPath:path
+                                         withCrop:CGRectMake((image.size.width-w)/2,(image.size.height-w)/2,w,w)
+                                        andResize:[self collectionView:nil layout:nil sizeForItemAtIndexPath:nil]];
             if (image == nil)
                 return;
             

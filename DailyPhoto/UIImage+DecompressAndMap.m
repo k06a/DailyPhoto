@@ -11,27 +11,37 @@
 
 @implementation UIImage (DecompressAndMap)
 
-- (UIImage *)decompressAndMapUsingKey:(NSString *)key
+- (UIImage *)decompressAndMapToPath:(NSString *)path
 {
-    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-    return [self decompressAndMapToPath:path usingKey:key];
+    return [self decompressAndMapToPath:path
+                               withCrop:(CGRect){CGPointZero,self.size}
+                              andResize:self.size];
+}
+
+- (UIImage *)decompressAndMapToPath:(NSString *)path withCrop:(CGRect)cropRect
+{
+    return [self decompressAndMapToPath:path
+                               withCrop:cropRect
+                              andResize:cropRect.size];
+}
+
+- (UIImage *)decompressAndMapToPath:(NSString *)path withResize:(CGSize)resizeSize;
+{
+    return [self decompressAndMapToPath:path
+                               withCrop:(CGRect){CGPointZero,self.size}
+                              andResize:resizeSize];
 }
 
 // conform to CGDataProviderReleaseDataCallback
 void munmap_wrapper(void *p, const void *cp, size_t l) { munmap(p,l); }
 
-- (UIImage *)decompressAndMapToPath:(NSString *)path usingKey:(NSString *)key;
+- (UIImage *)decompressAndMapToPath:(NSString *)path withCrop:(CGRect)cropRect andResize:(CGSize)resizeSize;
 {
-    NSString *filename = [NSString stringWithFormat:@"%lu-%d",
-                          (unsigned long)[key hash],
-                          (int)[key length]];
-    path = [path stringByAppendingPathComponent:filename];
-    
     CGImageRef sourceImage = self.CGImage;
     
     //Parameters needed to create the bitmap context
-    size_t width = CGImageGetWidth(sourceImage);
-    size_t height = CGImageGetHeight(sourceImage);
+    size_t width = resizeSize.width;//CGImageGetWidth(sourceImage);
+    size_t height = resizeSize.height;//CGImageGetHeight(sourceImage);
     size_t bitsPerComponent = 8;    //Each component is 1 byte, so 8 bits
     size_t bytesPerRow = 4 * width; //Uncompressed RGBA is 4 bytes per pixel
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
@@ -49,9 +59,15 @@ void munmap_wrapper(void *p, const void *cp, size_t l) { munmap(p,l); }
     
     //Create uncompressed context, draw the compressed source image into it
     //and save the resulting image.
-    CGContextRef context = CGBitmapContextCreate(data+8, width, height, bitsPerComponent, bytesPerRow, colorSpace, (uint32_t)kCGImageAlphaPremultipliedLast);
-    CGContextDrawImage(context, CGRectMake(0, 0, width, height), sourceImage);
-    //CGImageRef inflatedImage = CGBitmapContextCreateImage(context);
+    CGContextRef context = CGBitmapContextCreate(data, width, height, bitsPerComponent, bytesPerRow, colorSpace, (uint32_t)kCGImageAlphaPremultipliedLast);
+    
+    CGFloat kx = resizeSize.width / cropRect.size.width;
+    CGFloat ky = resizeSize.height / cropRect.size.height;
+    CGRect drawRect = CGRectMake(-cropRect.origin.x*kx,
+                                 -cropRect.origin.y*kx,
+                                 self.size.width*kx,
+                                 self.size.height*ky);
+    CGContextDrawImage(context, drawRect, sourceImage);
     
     CGDataProviderRef provider = CGDataProviderCreateWithData(data, data, size, munmap_wrapper);
     CGImageRef inflatedImage = CGImageCreate(width, height, bitsPerComponent, 4*8, bytesPerRow, colorSpace, (uint32_t)kCGImageAlphaPremultipliedLast, provider, NULL, NO, kCGRenderingIntentDefault);
@@ -64,19 +80,8 @@ void munmap_wrapper(void *p, const void *cp, size_t l) { munmap(p,l); }
     return [UIImage imageWithCGImage:inflatedImage];
 }
 
-+ (UIImage *)imageMapUsingKey:(NSString *)key
++ (UIImage *)imageMapFromPath:(NSString *)path
 {
-    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-    return [UIImage imageMapFromPath:path usingKey:key];
-}
-
-+ (UIImage *)imageMapFromPath:(NSString *)path usingKey:(NSString *)key
-{
-    NSString *filename = [NSString stringWithFormat:@"%lu-%d",
-                          (unsigned long)[key hash],
-                          (int)[key length]];
-    path = [path stringByAppendingPathComponent:filename];
-    
     int width = 0;
     int height = 0;
     

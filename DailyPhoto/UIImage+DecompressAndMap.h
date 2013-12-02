@@ -10,10 +10,11 @@
 
 @interface UIImage (DecompressAndMap)
 
-- (UIImage *)decompressAndMapUsingKey:(NSString *)key;
-- (UIImage *)decompressAndMapToPath:(NSString *)path usingKey:(NSString *)key;
+- (UIImage *)decompressAndMapToPath:(NSString *)path;
+- (UIImage *)decompressAndMapToPath:(NSString *)path withCrop:(CGRect)cropRect;
+- (UIImage *)decompressAndMapToPath:(NSString *)path withResize:(CGSize)resizeSize;
+- (UIImage *)decompressAndMapToPath:(NSString *)path withCrop:(CGRect)cropRect andResize:(CGSize)resizeSize;
 
-+ (UIImage *)imageMapUsingKey:(NSString *)key;
-+ (UIImage *)imageMapFromPath:(NSString *)path usingKey:(NSString *)key;
++ (UIImage *)imageMapFromPath:(NSString *)path;
 
 @end
