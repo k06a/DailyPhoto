@@ -53,7 +53,7 @@
              NSData * data = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:url] returningResponse:&response error:&error];
              if (error)
                 NSLog(@"Error loading url %@: %@", url, error);
-             
+            
              [mainQueue addOperationWithBlock:^{
                  NSMutableSet *blocksToDelete = [NSMutableSet set];
                  for (id a in blocks)

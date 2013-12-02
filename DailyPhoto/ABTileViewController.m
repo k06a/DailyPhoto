@@ -330,11 +330,10 @@ const NSInteger imageViewTag = 101;
     
     self.collectionView.showsVerticalScrollIndicator = NO;
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell_photo"];
-    //TODO uncomment
-    //[self loadPageUrl:@"http://fotki.yandex.ru/calendar/rss2"
-    //         nextPage:^(NSString *nextPageUrl) {
-    //             self.nextPageUrl = nextPageUrl;
-    //         }];
+    [self loadPageUrl:@"http://fotki.yandex.ru/calendar/rss2"
+             nextPage:^(NSString *nextPageUrl) {
+                 self.nextPageUrl = nextPageUrl;
+             }];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
     self.refreshControl.tintColor = [UIColor whiteColor];
