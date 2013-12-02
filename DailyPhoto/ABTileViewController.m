@@ -224,6 +224,8 @@ const NSInteger imageViewTag = 101;
     
     NSString *urlStr = self.items[indexPath.item%self.items.count][@"media:content"][@"url"];
     self.photoViewController.fullImage = [UIImage imageWithData:[self.thumbnailCache objectForKey:urlStr]];
+    self.photoViewController.photoTitle = self.items[indexPath.item%self.items.count][@"title"];
+    self.photoViewController.photoAuthor = self.items[indexPath.item%self.items.count][@"author"];
     
     NSData *data = [self.photoCache objectForKey:urlStr];
     if (data == nil)

@@ -14,6 +14,8 @@
 @property (strong, nonatomic) UIView *blackView;
 @property (strong, nonatomic) UIImageView *imageView;
 @property (strong, nonatomic) UIImageView *imageView2;
+@property (strong, nonatomic) UILabel *titleLabel;
+@property (strong, nonatomic) UILabel *authorLabel;
 
 @end
 
@@ -36,18 +38,28 @@
 
 - (void)tap:(id)sender
 {
-    [UIView animateWithDuration:0.3
+    self.titleLabel.alpha = 1.0;
+    self.authorLabel.alpha = 1.0;
+    [UIView animateWithDuration:0.2
                           delay:0.0
-                        options:(UIViewAnimationOptionBeginFromCurrentState|
-                                 UIViewAnimationOptionCurveEaseInOut)
+                        options:(UIViewAnimationOptionCurveEaseInOut)
                      animations:^{
-                         self.view.backgroundColor = [UIColor clearColor];
-                         self.imageView.transform = CGAffineTransformIdentity;
-                         self.imageView2.transform = CGAffineTransformIdentity;
+                         self.titleLabel.alpha = 0.0;
+                         self.authorLabel.alpha = 0.0;
                      } completion:^(BOOL finished) {
-                         self.imageView.hidden = NO;
-                         self.imageView2.hidden = YES;
-                         [self dismissViewControllerAnimated:NO completion:nil];
+                         [UIView animateWithDuration:0.3
+                                               delay:0.0
+                                             options:(UIViewAnimationOptionBeginFromCurrentState|
+                                                      UIViewAnimationOptionCurveEaseInOut)
+                                          animations:^{
+                                              self.view.backgroundColor = [UIColor clearColor];
+                                              self.imageView.transform = CGAffineTransformIdentity;
+                                              self.imageView2.transform = CGAffineTransformIdentity;
+                                          } completion:^(BOOL finished) {
+                                              self.imageView.hidden = NO;
+                                              self.imageView2.hidden = YES;
+                                              [self dismissViewControllerAnimated:NO completion:nil];
+                                          }];
                      }];
 }
 
@@ -109,6 +121,14 @@
                      } completion:^(BOOL finished) {
                          self.imageView.hidden = YES;
                          self.imageView2.hidden = NO;
+                         
+                         [UIView animateWithDuration:0.2
+                                               delay:0.0
+                                             options:(UIViewAnimationOptionCurveEaseInOut)
+                                          animations:^{
+                                              self.titleLabel.alpha = 1.0;
+                                              self.authorLabel.alpha = 1.0;
+                                          } completion:nil];
                      }];
 }
 
@@ -121,12 +141,27 @@
     self.imageView.image = self.miniImage;
     self.imageView2.frame = self.miniFrame;
     self.imageView2.image = self.fullImage;
+    self.titleLabel.text = self.photoTitle;
+    self.authorLabel.text = [@"by " stringByAppendingString:self.photoAuthor];
+    self.titleLabel.alpha = 0.0;
+    self.authorLabel.alpha = 0.0;
+    
+    CGFloat w = MIN(self.view.bounds.size.width, self.view.bounds.size.height);
+    self.titleLabel.frame = CGRectMake((self.view.bounds.size.width-w)/2+w*0.05,
+                                       (self.view.bounds.size.height-w)/2 + w*8.2/10, w*0.9, w/10);
+    self.authorLabel.frame = CGRectMake((self.view.bounds.size.width-w)/2+w*0.05,
+                                        (self.view.bounds.size.height-w)/2 + w*9/10, w*0.9, w/10);
+}
+
+- (BOOL)shouldAutorotate
+{
+    return NO;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	
+    
     self.view.backgroundColor = [UIColor clearColor];
     self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
     [self.view addGestureRecognizer:self.tapRecognizer];
@@ -140,9 +175,38 @@
     self.imageView2.contentMode = UIViewContentModeScaleAspectFill;
     self.imageView2.clipsToBounds = YES;
     
+    self.titleLabel = [[UILabel alloc] init];
+    self.titleLabel.numberOfLines = 0;
+    self.titleLabel.backgroundColor = [UIColor clearColor];
+    self.titleLabel.textAlignment = NSTextAlignmentRight;
+    self.titleLabel.textColor = [UIColor whiteColor];
+    self.titleLabel.shadowColor = [UIColor grayColor];
+    self.titleLabel.shadowOffset = CGSizeMake(1,1);
+    [self.titleLabel setMinimumScaleFactor:0.5];
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+        self.titleLabel.font = [UIFont systemFontOfSize:36];
+    else
+        self.titleLabel.font = [UIFont systemFontOfSize:24];
+    
+    self.authorLabel = [[UILabel alloc] init];
+    self.authorLabel.numberOfLines = 0;
+    self.authorLabel.backgroundColor = [UIColor clearColor];
+    self.authorLabel.textAlignment = NSTextAlignmentRight;
+    self.authorLabel.textColor = [UIColor whiteColor];
+    self.authorLabel.shadowColor = [UIColor grayColor];
+    self.authorLabel.shadowOffset = CGSizeMake(1,1);
+    [self.authorLabel setMinimumScaleFactor:0.5];
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+        self.authorLabel.font = [UIFont italicSystemFontOfSize:36];
+    else
+        self.authorLabel.font = [UIFont italicSystemFontOfSize:24];
+    
     [self.view addSubview:self.blackView];
     [self.view addSubview:self.imageView];
     [self.view addSubview:self.imageView2];
+    [self.view addSubview:self.titleLabel];
+    [self.view addSubview:self.authorLabel];
+    
     self.imageView2.hidden = YES;
 }
 

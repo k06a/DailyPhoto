@@ -15,4 +15,7 @@
 @property (strong, nonatomic) UIImage *miniImage;
 @property (strong, nonatomic) UIImage *fullImage;
 
+@property (strong, nonatomic) NSString *photoTitle;
+@property (strong, nonatomic) NSString *photoAuthor;
+
 @end
