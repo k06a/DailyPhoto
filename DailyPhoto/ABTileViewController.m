@@ -11,6 +11,8 @@
 #import "NSXMLParser+Laconic.h"
 #import "UIImage+DecompressAndMap.h"
 
+#define LOOP_FIRST_RSS_RESULT
+
 const NSInteger imageViewTag = 101;
 
 @interface ABTileViewController () <UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
@@ -55,7 +57,11 @@ const NSInteger imageViewTag = 101;
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section
 {
+#ifdef LOOP_FIRST_RSS_RESULT
+    return self.items.count * 1000;
+#else
     return self.items.count;
+#endif
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
@@ -141,12 +147,14 @@ const NSInteger imageViewTag = 101;
         });
     }
     
+#ifndef LOOP_FIRST_RSS_RESULT
     if (indexPath.item == self.items.count - 1) {
         [self loadPageUrl:self.nextPageUrl
                  nextPage:^(NSString *nextPageUrl) {
                      self.nextPageUrl = nextPageUrl;
                  }];
     }
+#endif
     
     return cell;
 }
@@ -206,11 +214,15 @@ const NSInteger imageViewTag = 101;
                 }
             }
             
+#ifdef LOOP_FIRST_RSS_RESULT
+            [self.collectionView reloadData];
+#else
             [self.collectionView performBatchUpdates:^{
                 [self.collectionView insertItemsAtIndexPaths:indexPaths];
             } completion:^(BOOL finished) {
                 ;
             }];
+#endif
         });
     });
 }
