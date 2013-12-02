@@ -13,7 +13,7 @@
 #import "ABDataDiskCache.h"
 #import "NSData+FetchDataOnce.h"
 
-#define LOOP_FIRST_RSS_RESULT
+//#define LOOP_FIRST_RSS_RESULT
 
 const NSInteger imageViewTag = 101;
 
@@ -282,8 +282,10 @@ const NSInteger imageViewTag = 101;
                                  || item[@"media:content"][@"url"] == nil)
                                  continue;
                              
-                             if (insertToFront && (self.items.count > 0)
-                                 && [item[@"media:thumbnail"][@"url"] isEqualToString:self.items[0][@"media:thumbnail"][@"url"]])
+                             if (insertToFront
+                                 && (self.items.count > 0)
+                                 && frontIndex < self.items.count
+                                 && [item[@"media:thumbnail"][@"url"] isEqualToString:self.items[frontIndex][@"media:thumbnail"][@"url"]])
                                  break;
                              
                              NSUInteger index = insertToFront ? frontIndex++ : self.items.count;
