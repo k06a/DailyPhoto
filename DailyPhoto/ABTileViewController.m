@@ -74,6 +74,7 @@ const NSInteger imageViewTag = 101;
     {
         _photoViewController = [[ABPhotoViewController alloc] init];
         _photoViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        _photoViewController.wantsFullScreenLayout = YES;
     }
     return _photoViewController;
 }
@@ -218,8 +219,6 @@ const NSInteger imageViewTag = 101;
     UIView * v = [collectionView cellForItemAtIndexPath:indexPath].contentView;
     self.photoViewController.currentIndexPath = indexPath;
     self.photoViewController.miniFrame = [v convertRect:v.bounds toView:self.view];
-    if ([[[UIDevice currentDevice] systemVersion] compare:@"7"] == NSOrderedAscending)
-        self.photoViewController.miniFrame = CGRectOffset(self.photoViewController.miniFrame, 0, -20);
     self.photoViewController.miniImage = [UIImage imageWithData:[self.thumbnailCache objectForKey:miniUrlStr]];
     
     NSString *urlStr = self.items[indexPath.item%self.items.count][@"media:content"][@"url"];

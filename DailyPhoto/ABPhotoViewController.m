@@ -103,13 +103,18 @@
                     }];
     */
     
+    [UIView animateWithDuration:0.4
+                          delay:0.1
+                        options:(UIViewAnimationOptionCurveEaseInOut)
+                     animations:^{
+                         self.view.backgroundColor = [UIColor blackColor];
+                     } completion:nil];
+    
     CGFloat w = MIN(self.view.bounds.size.width, self.view.bounds.size.height);
     [UIView animateWithDuration:0.3
                           delay:0.0
-                        options:(UIViewAnimationOptionBeginFromCurrentState|
-                                 UIViewAnimationOptionCurveEaseInOut)
+                        options:(UIViewAnimationOptionCurveEaseInOut)
                      animations:^{
-                         self.view.backgroundColor = [UIColor blackColor];
                          CGAffineTransform trans = CGAffineTransformScale(
                                                         CGAffineTransformMakeTranslation(
                                                             CGRectGetMidX(self.view.bounds) - CGRectGetMidX(self.miniFrame),
@@ -162,6 +167,7 @@
 {
     [super viewDidLoad];
     
+    self.view.frame = [UIScreen mainScreen].bounds;
     self.view.backgroundColor = [UIColor clearColor];
     self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
     [self.view addGestureRecognizer:self.tapRecognizer];
