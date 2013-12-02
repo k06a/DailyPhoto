@@ -25,6 +25,8 @@
 		25B424B718465AF2004D606E /* NSXMLParser+Laconic.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B424B618465AF2004D606E /* NSXMLParser+Laconic.m */; };
 		25FA8A1A184B97C700A864BB /* ABBetterNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25FA8A19184B97C700A864BB /* ABBetterNavigationController.m */; };
 		25FA8A1D184BA1AC00A864BB /* ABPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25FA8A1C184BA1AC00A864BB /* ABPhotoViewController.m */; };
+		25FA8A21184CF0F500A864BB /* ABDataDiskCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 25FA8A20184CF0F500A864BB /* ABDataDiskCache.m */; };
+		25FA8A24184D0E9800A864BB /* NSData+FetchDataOnce.m in Sources */ = {isa = PBXBuildFile; fileRef = 25FA8A23184D0E9800A864BB /* NSData+FetchDataOnce.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +67,10 @@
 		25FA8A19184B97C700A864BB /* ABBetterNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABBetterNavigationController.m; sourceTree = "<group>"; };
 		25FA8A1B184BA1AC00A864BB /* ABPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABPhotoViewController.h; sourceTree = "<group>"; };
 		25FA8A1C184BA1AC00A864BB /* ABPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABPhotoViewController.m; sourceTree = "<group>"; };
+		25FA8A1F184CF0F500A864BB /* ABDataDiskCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABDataDiskCache.h; sourceTree = "<group>"; };
+		25FA8A20184CF0F500A864BB /* ABDataDiskCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABDataDiskCache.m; sourceTree = "<group>"; };
+		25FA8A22184D0E9800A864BB /* NSData+FetchDataOnce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+FetchDataOnce.h"; sourceTree = "<group>"; };
+		25FA8A23184D0E9800A864BB /* NSData+FetchDataOnce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+FetchDataOnce.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,12 +177,16 @@
 		25FA8A1E184BA1B300A864BB /* Reusable */ = {
 			isa = PBXGroup;
 			children = (
+				25FA8A1F184CF0F500A864BB /* ABDataDiskCache.h */,
+				25FA8A20184CF0F500A864BB /* ABDataDiskCache.m */,
 				25FA8A18184B97C700A864BB /* ABBetterNavigationController.h */,
 				25FA8A19184B97C700A864BB /* ABBetterNavigationController.m */,
 				25B424B518465AF2004D606E /* NSXMLParser+Laconic.h */,
 				25B424B618465AF2004D606E /* NSXMLParser+Laconic.m */,
 				2549467B184A711600BDC380 /* UIImage+DecompressAndMap.h */,
 				2549467C184A711600BDC380 /* UIImage+DecompressAndMap.m */,
+				25FA8A22184D0E9800A864BB /* NSData+FetchDataOnce.h */,
+				25FA8A23184D0E9800A864BB /* NSData+FetchDataOnce.m */,
 			);
 			name = Reusable;
 			sourceTree = "<group>";
@@ -282,9 +292,11 @@
 			files = (
 				25B424931846542B004D606E /* main.m in Sources */,
 				25494677184A547B00BDC380 /* ABTileViewController.m in Sources */,
+				25FA8A21184CF0F500A864BB /* ABDataDiskCache.m in Sources */,
 				25B424971846542B004D606E /* ABAppDelegate.m in Sources */,
 				25FA8A1A184B97C700A864BB /* ABBetterNavigationController.m in Sources */,
 				2549467D184A711600BDC380 /* UIImage+DecompressAndMap.m in Sources */,
+				25FA8A24184D0E9800A864BB /* NSData+FetchDataOnce.m in Sources */,
 				25FA8A1D184BA1AC00A864BB /* ABPhotoViewController.m in Sources */,
 				25B424B718465AF2004D606E /* NSXMLParser+Laconic.m in Sources */,
 			);

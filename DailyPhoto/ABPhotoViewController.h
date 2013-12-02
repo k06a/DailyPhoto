@@ -10,6 +10,7 @@
 
 @interface ABPhotoViewController : UIViewController
 
+@property (strong, nonatomic) NSIndexPath *currentIndexPath;
 @property (assign, nonatomic) CGRect miniFrame;
 @property (strong, nonatomic) UIImage *miniImage;
 @property (strong, nonatomic) UIImage *fullImage;
