@@ -103,7 +103,7 @@ const NSInteger imageViewTag = 101;
 {
     if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
         return CGSizeMake(128,128);
-    return CGSizeMake(40,40);
+    return CGSizeMake(80,80);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
@@ -218,6 +218,8 @@ const NSInteger imageViewTag = 101;
     UIView * v = [collectionView cellForItemAtIndexPath:indexPath].contentView;
     self.photoViewController.currentIndexPath = indexPath;
     self.photoViewController.miniFrame = [v convertRect:v.bounds toView:self.view];
+    if ([[[UIDevice currentDevice] systemVersion] compare:@"7"] == NSOrderedAscending)
+        self.photoViewController.miniFrame = CGRectOffset(self.photoViewController.miniFrame, 0, -20);
     self.photoViewController.miniImage = [UIImage imageWithData:[self.thumbnailCache objectForKey:miniUrlStr]];
     
     NSString *urlStr = self.items[indexPath.item%self.items.count][@"media:content"][@"url"];
@@ -336,10 +338,14 @@ const NSInteger imageViewTag = 101;
              }];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
-    self.refreshControl.tintColor = [UIColor whiteColor];
     [self.refreshControl addTarget:self action:@selector(refershControlAction:) forControlEvents:UIControlEventValueChanged];
     [self.collectionView addSubview:self.refreshControl];
     self.collectionView.alwaysBounceVertical = YES;
+    
+    if ([[[UIDevice currentDevice] systemVersion] compare:@"7"] == NSOrderedAscending)
+        self.collectionView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
+    else
+        self.refreshControl.tintColor = [UIColor whiteColor];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
 }
