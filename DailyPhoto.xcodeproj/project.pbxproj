@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		25494677184A547B00BDC380 /* ABTileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25494676184A547B00BDC380 /* ABTileViewController.m */; };
-		2549467A184A659600BDC380 /* ABDiskCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 25494679184A659600BDC380 /* ABDiskCache.m */; };
 		2549467D184A711600BDC380 /* UIImage+DecompressAndMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 2549467C184A711600BDC380 /* UIImage+DecompressAndMap.m */; };
 		2549467F184A7E1F00BDC380 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2549467E184A7E1F00BDC380 /* ImageIO.framework */; };
 		25B424871846542B004D606E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B424861846542B004D606E /* Foundation.framework */; };
@@ -41,8 +40,6 @@
 /* Begin PBXFileReference section */
 		25494675184A547B00BDC380 /* ABTileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABTileViewController.h; sourceTree = "<group>"; };
 		25494676184A547B00BDC380 /* ABTileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABTileViewController.m; sourceTree = "<group>"; };
-		25494678184A659600BDC380 /* ABDiskCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABDiskCache.h; sourceTree = "<group>"; };
-		25494679184A659600BDC380 /* ABDiskCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABDiskCache.m; sourceTree = "<group>"; };
 		2549467B184A711600BDC380 /* UIImage+DecompressAndMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+DecompressAndMap.h"; sourceTree = "<group>"; };
 		2549467C184A711600BDC380 /* UIImage+DecompressAndMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+DecompressAndMap.m"; sourceTree = "<group>"; };
 		2549467E184A7E1F00BDC380 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
@@ -176,8 +173,6 @@
 			children = (
 				25FA8A18184B97C700A864BB /* ABBetterNavigationController.h */,
 				25FA8A19184B97C700A864BB /* ABBetterNavigationController.m */,
-				25494678184A659600BDC380 /* ABDiskCache.h */,
-				25494679184A659600BDC380 /* ABDiskCache.m */,
 				25B424B518465AF2004D606E /* NSXMLParser+Laconic.h */,
 				25B424B618465AF2004D606E /* NSXMLParser+Laconic.m */,
 				2549467B184A711600BDC380 /* UIImage+DecompressAndMap.h */,
@@ -290,7 +285,6 @@
 				25B424971846542B004D606E /* ABAppDelegate.m in Sources */,
 				25FA8A1A184B97C700A864BB /* ABBetterNavigationController.m in Sources */,
 				2549467D184A711600BDC380 /* UIImage+DecompressAndMap.m in Sources */,
-				2549467A184A659600BDC380 /* ABDiskCache.m in Sources */,
 				25FA8A1D184BA1AC00A864BB /* ABPhotoViewController.m in Sources */,
 				25B424B718465AF2004D606E /* NSXMLParser+Laconic.m in Sources */,
 			);

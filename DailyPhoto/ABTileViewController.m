@@ -9,7 +9,6 @@
 #import "ABTileViewController.h"
 #import "ABPhotoViewController.h"
 #import "NSXMLParser+Laconic.h"
-#import "ABDiskCache.h"
 #import "UIImage+DecompressAndMap.h"
 
 const NSInteger imageViewTag = 101;
@@ -56,7 +55,7 @@ const NSInteger imageViewTag = 101;
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section
 {
-    return self.items.count * 1000;
+    return self.items.count;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
@@ -108,13 +107,18 @@ const NSInteger imageViewTag = 101;
     
     NSString *urlStr = self.items[indexPath.item%self.items.count][@"media:thumbnail"][@"url"];
     imageView.image = [self.imageCache objectForKey:urlStr];
+    if (imageView.image == nil) {
+        imageView.image = [UIImage imageMapUsingKey:urlStr];
+        if (imageView.image)
+            [self.imageCache setObject:imageView.image forKey:urlStr];
+    }
     
     if (imageView.image) {
         [self tileShowAnimation:imageView];
     } else {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlStr]];
-            UIImage *image = [[UIImage imageWithData:data] decompressAndMap];
+            UIImage *image = [[UIImage imageWithData:data] decompressAndMapUsingKey:urlStr];
             if (image == nil)
                 return;
             
@@ -128,14 +132,12 @@ const NSInteger imageViewTag = 101;
         });
     }
     
-    /*
     if (indexPath.item == self.items.count - 1) {
         [self loadPageUrl:self.nextPageUrl
                  nextPage:^(NSString *nextPageUrl) {
                      self.nextPageUrl = nextPageUrl;
                  }];
     }
-     */
     
     return cell;
 }
@@ -153,7 +155,7 @@ const NSInteger imageViewTag = 101;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlStr]];
-        UIImage *image = [[UIImage imageWithData:data] decompressAndMap];
+        UIImage *image = [UIImage imageWithData:data];// decompressAndMapUsingKey:urlStr];
         if (image == nil)
             return;
         
@@ -185,20 +187,21 @@ const NSInteger imageViewTag = 101;
                 nextPage(xml[@"rss"][@"channel"][@"atom:link"][@"href"]);
             
             NSMutableArray *indexPaths = [NSMutableArray array];
+            //BOOL insertToFront = [urlStr rangeOfString:@"?"].location == NSNotFound;
+            //int frontIndex = 0;
             for (id item in xml[@"rss"][@"channel"][@"item"]) {
                 if (item[@"media:thumbnail"][@"url"]) {
-                    [indexPaths addObject:[NSIndexPath indexPathForItem:self.items.count inSection:0]];
-                    [self.items addObject:item];
+                    int index = /*insertToFront ? frontIndex++ : */self.items.count;
+                    [indexPaths addObject:[NSIndexPath indexPathForItem:index inSection:0]];
+                    [self.items insertObject:item atIndex:index];
                 }
             }
-            /*
+            
             [self.collectionView performBatchUpdates:^{
                 [self.collectionView insertItemsAtIndexPaths:indexPaths];
             } completion:^(BOOL finished) {
                 ;
             }];
-             */
-            [self.collectionView reloadData];
         });
     });
 }
