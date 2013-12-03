@@ -33,7 +33,6 @@
         return;
     
     [mainQueue addOperationWithBlock:^{
-        NSMutableDictionary *dict = blocksDict;
         NSMutableSet * blocks = blocksDict[url];
         if (blocks == nil)
         {

@@ -14,6 +14,7 @@
 #import "NSData+FetchDataOnce.h"
 
 //#define LOOP_FIRST_RSS_RESULT
+#define RESIZE_IMAGES_TO_TILES
 
 const NSInteger imageViewTag = 101;
 
@@ -137,7 +138,11 @@ const NSInteger imageViewTag = 101;
     
     if (cell.contentView.subviews.count == 0) {
         imageView = [[UIImageView alloc] initWithFrame:cell.contentView.bounds];
+#ifdef RESIZE_IMAGES_TO_TILES
         imageView.contentMode = UIViewContentModeCenter;//ScaleAspectFill;
+#else
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+#endif
         imageView.clipsToBounds = YES;
         imageView.tag = imageViewTag;
         [cell.contentView addSubview:imageView];
@@ -177,11 +182,14 @@ const NSInteger imageViewTag = 101;
                              UIImage *image = [UIImage imageWithData:data];
                              CGFloat w = MIN(image.size.width, image.size.height);
                              image = [image decompressAndMapToPath:path
+#ifdef RESIZE_IMAGES_TO_TILES
                                                           withCrop:CGRectMake((image.size.width-w)/2,
                                                                               (image.size.height-w)/2,w,w)
                                                          andResize:[self collectionView:nil
                                                                                  layout:nil
-                                                                 sizeForItemAtIndexPath:nil]];
+                                                                 sizeForItemAtIndexPath:nil]
+#endif
+                                      ];
                              if (image == nil)
                                  return;
                              
@@ -220,6 +228,8 @@ const NSInteger imageViewTag = 101;
     self.photoViewController.currentIndexPath = indexPath;
     self.photoViewController.miniFrame = [v convertRect:v.bounds toView:self.view];
     self.photoViewController.miniImage = [UIImage imageWithData:[self.thumbnailCache objectForKey:miniUrlStr]];
+    if (self.photoViewController.miniImage == nil)
+        self.photoViewController.miniImage = self.tileDict[miniUrlStr];
     
     NSString *urlStr = self.items[indexPath.item%self.items.count][@"media:content"][@"url"];
     self.photoViewController.fullImage = [UIImage imageWithData:[self.thumbnailCache objectForKey:urlStr]];
