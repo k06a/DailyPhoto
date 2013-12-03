@@ -306,6 +306,8 @@ const NSInteger imageViewTag = 101;
                          
                          if (indexPaths.count > 0)
                          {
+                             if (insertToFront)
+                                 [self saveItems:nil];
 #ifdef LOOP_FIRST_RSS_RESULT
                              [self.collectionView reloadData];
 #else
@@ -359,11 +361,9 @@ const NSInteger imageViewTag = 101;
         self.collectionView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
     else
         self.refreshControl.tintColor = [UIColor whiteColor];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
 }
 
-- (void)appWillTerminate:(id)sender
+- (void)saveItems:(id)sender
 {
     [[NSUserDefaults standardUserDefaults] setObject:self.items forKey:@"Items"];
     [[NSUserDefaults standardUserDefaults] synchronize];

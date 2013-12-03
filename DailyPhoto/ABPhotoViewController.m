@@ -13,7 +13,6 @@
 @property (strong, nonatomic) UITapGestureRecognizer *tapRecognizer;
 @property (strong, nonatomic) UIView *blackView;
 @property (strong, nonatomic) UIImageView *imageView;
-@property (strong, nonatomic) UIImageView *imageView2;
 @property (strong, nonatomic) UILabel *titleLabel;
 @property (strong, nonatomic) UILabel *authorLabel;
 
@@ -33,11 +32,29 @@
 - (void)setFullImage:(UIImage *)fullImage
 {
     _fullImage = fullImage;
-    self.imageView2.image = fullImage;
+    self.imageView.image = fullImage;
 }
 
 - (void)tap:(id)sender
 {
+    CAKeyframeAnimation *firstHalfBackFlip = [self animationFromTrans:[self endOfSecondHalfTransform]
+                                                              toTrans:[self startOfSecondHalfTransform]
+                                                           timingFunc:kCAMediaTimingFunctionEaseIn];
+    [firstHalfBackFlip setValue:@"firstHalfBackFlip" forKey:@"FlipType"];
+    firstHalfBackFlip.beginTime = CACurrentMediaTime() + 0.15;
+    
+    CAKeyframeAnimation *secondHalfBackFlip = [self animationFromTrans:[self endOfFirstHalfTransform]
+                                                               toTrans:[self startOfFirstHalfTransform]
+                                                            timingFunc:kCAMediaTimingFunctionEaseOut];
+    [secondHalfBackFlip setValue:@"secondHalfFlip" forKey:@"FlipType"];
+    secondHalfBackFlip.beginTime = CACurrentMediaTime() + 0.15 + firstHalfBackFlip.duration;
+    
+    secondHalfBackFlip.removedOnCompletion = NO;
+    secondHalfBackFlip.delegate = self;
+
+    [self.imageView.layer addAnimation:firstHalfBackFlip forKey:@"FirstHalfBackFlip"];
+    [self.imageView.layer addAnimation:secondHalfBackFlip forKey:@"SecondHalfBackFlip"];
+    
     self.titleLabel.alpha = 1.0;
     self.authorLabel.alpha = 1.0;
     [UIView animateWithDuration:0.2
@@ -47,17 +64,12 @@
                          self.titleLabel.alpha = 0.0;
                          self.authorLabel.alpha = 0.0;
                      } completion:^(BOOL finished) {
-                         [UIView animateWithDuration:0.3
+                         [UIView animateWithDuration:0.4
                                                delay:0.0
-                                             options:(UIViewAnimationOptionBeginFromCurrentState|
-                                                      UIViewAnimationOptionCurveEaseInOut)
+                                             options:(UIViewAnimationOptionCurveEaseInOut)
                                           animations:^{
                                               self.view.backgroundColor = [UIColor clearColor];
-                                              self.imageView.transform = CGAffineTransformIdentity;
-                                              self.imageView2.transform = CGAffineTransformIdentity;
                                           } completion:^(BOOL finished) {
-                                              self.imageView.hidden = NO;
-                                              self.imageView2.hidden = YES;
                                               [self dismissViewControllerAnimated:NO completion:nil];
                                           }];
                      }];
@@ -67,80 +79,17 @@
 {
     return UIStatusBarStyleLightContent;
 }
-/*
-+ (void)flipFromView:(UIView *)fromView toView:(UIView *)toView
-{
-    [fromView.superview addSubview:toView];
-    
-    //ready to transform
-    toView.transform = CGAffineTransformMake(0, 0, 0, 1, 0, 0);
-    
-    [UIView animateWithDuration:0.4 animations:^{
-        //fromView disappear with flip 90º
-        fromView.transform = CGAffineTransformMake(0, 0, 0, 1, 0, 0);
-	} completion:^(BOOL finished) {
-		[UIView animateWithDuration:0.4 animations:^{
-            //toView appear with flip 90º
-			toView.transform = CGAffineTransformMake(1, 0, 0, 1, 0, 0);
-        } completion:^(BOOL finished) {
-            [fromView removeFromSuperview];
-		}];
-    }];
-}
-*/
-- (CAKeyframeAnimation *)firstHalfFlipAnimation:(CGRect)transAndScaleRect
-{
-    CATransform3D an0 = CATransform3DIdentity;
-    CATransform3D an1 = [self endOfFirstHalfTransform];
-    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
-    animation.values = @[[NSValue valueWithCATransform3D:an0],
-                         [NSValue valueWithCATransform3D:an1]];
-    animation.duration = 0.3;
-    animation.timingFunctions = @[[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn]];
-    
-    return animation;
-}
 
-- (CAKeyframeAnimation *)secondHalfFlipAnimation:(CGRect)transAndScaleRect
-{
-    CATransform3D an0 = [self startOfSecondHalfTransform];
-    CATransform3D an1 = [self endOfSecondHalfTransform];
-    
-    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
-    animation.values = @[[NSValue valueWithCATransform3D:an0],
-                         [NSValue valueWithCATransform3D:an1]];
-    animation.duration = 0.3;
-    animation.timingFunctions = @[[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
-    
-    return animation;
-}
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
 {
-    if (anim == [self.imageView.layer animationForKey:@"FirstFlip"])
+    if (anim == [self.imageView.layer animationForKey:@"SecondHalfFlip"])
     {
-        self.imageView2.layer.transform = [self startOfSecondHalfTransform];
-        self.imageView2.hidden = NO;
-        self.imageView.hidden = YES;
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.imageView.layer removeAnimationForKey:@"FirstFlip"];
-            CAKeyframeAnimation *halfFlip2 = [self secondHalfFlipAnimation:[self createTransAndScaleRect]];
-            halfFlip2.removedOnCompletion = NO;
-            halfFlip2.delegate = self;
-            [self.imageView2.layer addAnimation:halfFlip2 forKey:@"SecondFlip"];
-        });
-        
-        return;
-    }
-    
-    if (anim == [self.imageView2.layer animationForKey:@"SecondFlip"])
-    {
-        self.imageView2.layer.transform = [self endOfSecondHalfTransform];
-        [self.imageView.layer removeAnimationForKey:@"SecondFlip"];
+        [self.imageView.layer removeAnimationForKey:@"SecondHalfFlip"];
+        self.imageView.layer.transform = [self endOfSecondHalfTransform];
         /*
         CGFloat w = MIN(self.view.bounds.size.width, self.view.bounds.size.height);
-        self.imageView2.transform = CGAffineTransformScale(
+        self.imageView.transform = CGAffineTransformScale(
                                         CGAffineTransformMakeTranslation(
                                             CGRectGetMidX(self.view.bounds) - CGRectGetMidX(self.miniFrame),
                                             CGRectGetMidY(self.view.bounds) - CGRectGetMidY(self.miniFrame)),
@@ -149,6 +98,31 @@
         */
         return;
     }
+    
+    if (anim == [self.imageView.layer animationForKey:@"SecondHalfBackFlip"])
+    {
+        [self.imageView.layer removeAnimationForKey:@"SecondHalfBackFlip"];
+        self.imageView.layer.transform = [self startOfFirstHalfTransform];
+        /*
+        self.imageView.transform = CGAffineTransformIdentity;
+        */
+        return;
+    }
+    
+}
+
+- (CGRect)createTransAndScaleRect
+{
+    CGFloat w = MIN(self.view.bounds.size.width, self.view.bounds.size.height);
+    return CGRectMake(CGRectGetMidX(self.view.bounds) - CGRectGetMidX(self.miniFrame),
+                      CGRectGetMidY(self.view.bounds) - CGRectGetMidY(self.miniFrame),
+                      w/self.miniFrame.size.width,
+                      w/self.miniFrame.size.width);
+}
+
+- (CATransform3D)startOfFirstHalfTransform
+{
+    return CATransform3DIdentity;
 }
 
 - (CATransform3D)endOfFirstHalfTransform
@@ -189,13 +163,18 @@
                 transAndScaleRect.size.height, 1.0);
 }
 
-- (CGRect)createTransAndScaleRect
+- (CAKeyframeAnimation *)animationFromTrans:(CATransform3D)t1
+                                    toTrans:(CATransform3D)t2
+                                 timingFunc:(NSString *)timingFunc
 {
-    CGFloat w = MIN(self.view.bounds.size.width, self.view.bounds.size.height);
-    return CGRectMake(CGRectGetMidX(self.view.bounds) - CGRectGetMidX(self.miniFrame),
-                      CGRectGetMidY(self.view.bounds) - CGRectGetMidY(self.miniFrame),
-                      w/self.miniFrame.size.width,
-                      w/self.miniFrame.size.width);
+    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+    animation.values = @[[NSValue valueWithCATransform3D:t1],
+                         [NSValue valueWithCATransform3D:t2]];
+    animation.duration = 0.25;
+    animation.timingFunctions = @[[CAMediaTimingFunction functionWithName:timingFunc]];
+    animation.fillMode = kCAFillModeForwards;
+    
+    return animation;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -204,60 +183,32 @@
     
     CATransform3D perspective = CATransform3DIdentity;
     perspective.m34 = 1.0 / - 180000.0;
-    self.view.layer.sublayerTransform = perspective;
+    self.view.layer.transform = perspective;
     
-    CAKeyframeAnimation *halfFlip = [self firstHalfFlipAnimation:[self createTransAndScaleRect]];
-    halfFlip.removedOnCompletion = NO;
-    halfFlip.delegate = self;
-    [self.imageView.layer addAnimation:halfFlip forKey:@"FirstFlip"];
-    //self.imageView.transform = CGAffineTransformIdentity;
+    CAKeyframeAnimation *firstHalfFlip = [self animationFromTrans:[self startOfFirstHalfTransform]
+                                                          toTrans:[self endOfFirstHalfTransform]
+                                                       timingFunc:kCAMediaTimingFunctionEaseIn];
+    [firstHalfFlip setValue:@"firstHalfFlip" forKey:@"FlipType"];
+    firstHalfFlip.beginTime = CACurrentMediaTime();
     
-    //self.imageView.hidden = NO;
-    //self.imageView2.hidden = NO;
+    CAKeyframeAnimation *secondHalfFlip = [self animationFromTrans:[self startOfSecondHalfTransform]
+                                                           toTrans:[self endOfSecondHalfTransform]
+                                                        timingFunc:kCAMediaTimingFunctionEaseOut];
+    [secondHalfFlip setValue:@"secondHalfFlip" forKey:@"FlipType"];
+    secondHalfFlip.beginTime = CACurrentMediaTime() + firstHalfFlip.duration;
     
-    /*
-    [UIView transitionFromView:self.imageView
-                        toView:self.imageView2
-                      duration:0.4
-                       options:(UIViewAnimationOptionBeginFromCurrentState|
-                                UIViewAnimationOptionTransitionNone)
-                    completion:^(BOOL finished) {
-                        ;
-                    }];
-    */
-    
-    [UIView animateWithDuration:0.6
+    secondHalfFlip.removedOnCompletion = NO;
+    secondHalfFlip.delegate = self;
+
+    [self.imageView.layer addAnimation:firstHalfFlip forKey:@"FirstHalfFlip"];
+    [self.imageView.layer addAnimation:secondHalfFlip forKey:@"SecondHalfFlip"];
+
+    [UIView animateWithDuration:0.4
                           delay:0.0
                         options:(UIViewAnimationOptionCurveEaseInOut)
                      animations:^{
                          self.view.backgroundColor = [UIColor blackColor];
                      } completion:^(BOOL finished) {
-                         [UIView animateWithDuration:0.4
-                                               delay:0.0
-                                             options:(UIViewAnimationOptionCurveEaseInOut)
-                                          animations:^{
-                                              self.titleLabel.alpha = 1.0;
-                                              self.authorLabel.alpha = 1.0;
-                                          } completion:nil];
-                     }];
-    /*
-    CGFloat w = MIN(self.view.bounds.size.width, self.view.bounds.size.height);
-    [UIView animateWithDuration:0.3
-                          delay:0.0
-                        options:(UIViewAnimationOptionCurveEaseInOut)
-                     animations:^{
-                         CGAffineTransform trans = CGAffineTransformScale(
-                                                        CGAffineTransformMakeTranslation(
-                                                            CGRectGetMidX(self.view.bounds) - CGRectGetMidX(self.miniFrame),
-                                                            CGRectGetMidY(self.view.bounds) - CGRectGetMidY(self.miniFrame)),
-                                                        w/self.miniFrame.size.width,
-                                                        w/self.miniFrame.size.width);
-                         self.imageView.transform = trans;
-                         self.imageView2.transform = trans;
-                     } completion:^(BOOL finished) {
-                         self.imageView.hidden = YES;
-                         self.imageView2.hidden = NO;
-                         
                          [UIView animateWithDuration:0.2
                                                delay:0.0
                                              options:(UIViewAnimationOptionCurveEaseInOut)
@@ -265,7 +216,7 @@
                                               self.titleLabel.alpha = 1.0;
                                               self.authorLabel.alpha = 1.0;
                                           } completion:nil];
-                     }];*/
+                     }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -274,19 +225,20 @@
     
     self.blackView.frame = self.miniFrame;
     self.imageView.frame = self.miniFrame;
-    self.imageView.image = self.miniImage;
-    self.imageView2.frame = self.miniFrame;
-    self.imageView2.image = self.fullImage;
+    self.imageView.image = self.fullImage ?: self.miniImage;
+    self.imageView.transform = CGAffineTransformIdentity;
     self.titleLabel.text = self.photoTitle;
     self.authorLabel.text = [@"by " stringByAppendingString:self.photoAuthor];
     self.titleLabel.alpha = 0.0;
     self.authorLabel.alpha = 0.0;
+    self.titleLabel.layer.transform = CATransform3DMakeTranslation(0,0,2000);
+    self.authorLabel.layer.transform = CATransform3DMakeTranslation(0,0,2000);
     
     CGFloat w = MIN(self.view.bounds.size.width, self.view.bounds.size.height);
-    self.titleLabel.frame = CGRectMake((self.view.bounds.size.width-w)/2+w*0.05,
+    self.titleLabel.frame = CGRectMake((self.view.bounds.size.width-w)/2 + w*0.05,
                                        (self.view.bounds.size.height-w)/2 + w*8.2/10, w*0.9, w/10);
-    self.authorLabel.frame = CGRectMake((self.view.bounds.size.width-w)/2+w*0.05,
-                                        (self.view.bounds.size.height-w)/2 + w*9/10, w*0.9, w/10);
+    self.authorLabel.frame = CGRectMake((self.view.bounds.size.width-w)/2 + w*0.05,
+                                        (self.view.bounds.size.height-w)/2 + w*9.0/10, w*0.9, w/10);
 }
 
 - (BOOL)shouldAutorotate
@@ -308,9 +260,6 @@
     self.imageView = [[UIImageView alloc] initWithFrame:self.miniFrame];
     self.imageView.contentMode = UIViewContentModeScaleAspectFill;
     self.imageView.clipsToBounds = YES;
-    self.imageView2 = [[UIImageView alloc] initWithFrame:self.miniFrame];
-    self.imageView2.contentMode = UIViewContentModeScaleAspectFill;
-    self.imageView2.clipsToBounds = YES;
     
     self.titleLabel = [[UILabel alloc] init];
     self.titleLabel.numberOfLines = 0;
@@ -340,11 +289,8 @@
     
     [self.view addSubview:self.blackView];
     [self.view addSubview:self.imageView];
-    [self.view addSubview:self.imageView2];
     [self.view addSubview:self.titleLabel];
     [self.view addSubview:self.authorLabel];
-    
-    self.imageView2.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
