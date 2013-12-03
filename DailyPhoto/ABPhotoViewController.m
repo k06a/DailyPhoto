@@ -80,7 +80,6 @@
     return UIStatusBarStyleLightContent;
 }
 
-
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
 {
     if (anim == [self.imageView.layer animationForKey:@"SecondHalfFlip"])
@@ -127,6 +126,8 @@
 
 - (CATransform3D)endOfFirstHalfTransform
 {
+    BOOL ky = (self.currentIndexPath.item & 0x01) == 0 ? 1 : -1;
+    BOOL kz = (self.currentIndexPath.item & 0x02) == 0 ? 1 : -1;
     CGRect transAndScaleRect = [self createTransAndScaleRect];
     return CATransform3DRotate(
                 CATransform3DRotate(
@@ -135,12 +136,14 @@
                                                      transAndScaleRect.origin.y, 1000),
                         transAndScaleRect.size.width,
                         transAndScaleRect.size.height, 1.0),
-                    -90*M_PI/180.0, 0.0, 1.0, 0.0),
-                -90*M_PI/180.0, 0.0, 0.0, 1.0);
+                    ky*90*M_PI/180.0, 0.0, 1.0, 0.0),
+                kz*90*M_PI/180.0, 0.0, 0.0, 1.0);
 }
 
 - (CATransform3D)startOfSecondHalfTransform
 {
+    BOOL ky = (self.currentIndexPath.item & 0x01) == 0 ? 1 : -1;
+    BOOL kz = (self.currentIndexPath.item & 0x02) == 0 ? 1 : -1;
     CGRect transAndScaleRect = [self createTransAndScaleRect];
     return CATransform3DRotate(
                 CATransform3DRotate(
@@ -149,8 +152,8 @@
                                                      transAndScaleRect.origin.y, 1000),
                         transAndScaleRect.size.width,
                         transAndScaleRect.size.height, 1.0),
-                    90*M_PI/180.0, 0.0, 1.0, 0.0),
-                90*M_PI/180.0, 0.0, 0.0, 1.0);
+                    -ky*90*M_PI/180.0, 0.0, 1.0, 0.0),
+                -kz*90*M_PI/180.0, 0.0, 0.0, 1.0);
 }
 
 - (CATransform3D)endOfSecondHalfTransform
@@ -182,7 +185,7 @@
     [super viewDidAppear:animated];
     
     CATransform3D perspective = CATransform3DIdentity;
-    perspective.m34 = 1.0 / - 180000.0;
+    perspective.m34 = 1.0 / - 180.0;
     self.view.layer.transform = perspective;
     
     CAKeyframeAnimation *firstHalfFlip = [self animationFromTrans:[self startOfFirstHalfTransform]
