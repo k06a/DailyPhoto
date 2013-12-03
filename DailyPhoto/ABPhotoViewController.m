@@ -107,7 +107,6 @@
         */
         return;
     }
-    
 }
 
 - (CGRect)createTransAndScaleRect
@@ -244,11 +243,6 @@
                                         (self.view.bounds.size.height-w)/2 + w*9.0/10, w*0.9, w/10);
 }
 
-- (BOOL)shouldAutorotate
-{
-    return NO;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -290,6 +284,7 @@
     else
         self.authorLabel.font = [UIFont italicSystemFontOfSize:24];
     
+    self.imageView.autoresizingMask = UIViewAutoresizingNone;
     [self.view addSubview:self.blackView];
     [self.view addSubview:self.imageView];
     [self.view addSubview:self.titleLabel];

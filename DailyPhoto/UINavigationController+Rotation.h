@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ABBetterNavigationController : UINavigationController
+@interface UINavigationController (Rotation)
+
+- (BOOL)shouldAutorotate;
+- (NSUInteger)supportedInterfaceOrientations;
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation;
 
 @end
