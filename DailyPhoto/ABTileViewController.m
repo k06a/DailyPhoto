@@ -259,7 +259,7 @@ const NSInteger imageViewTag = 101;
                      }];
     }
     
-    [self presentViewController:self.photoViewController animated:YES completion:nil];
+    [self presentViewController:self.photoViewController animated:NO completion:nil];
 }
 
 #pragma mark - UIView
@@ -374,6 +374,7 @@ const NSInteger imageViewTag = 101;
     [super viewDidLoad];
 	
     [self setup];
+    [self photoViewController];
 }
 
 - (void)didReceiveMemoryWarning
